@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Summarization Tool</title>
+  <style>
+    /* General body styles */
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #c4e2ea; /* Light blue background */
+      color: #4d1141; /* Main text color */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 120vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+      transition: background-color 0.5s;
+    }
+
+    /* Form styles */
+    form {
+      background-color: #f8f3cd; /* Soft yellow background for the form */
+      padding: 30px; /* Increased padding */
+      border-radius: 15px; /* More rounded corners */
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      height: 60vh;
+      width: 100%;
+      max-width: 600px;
+      color: #333;
+      transition: transform 0.3s, box-shadow 0.3s; /* Animation for hover effect */
+    }
+
+    form:hover {
+      transform: scale(1.02); /* Slightly enlarges the form on hover */
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); /* Deepens shadow on hover */
+    }
+
+    /* Header styles */
+    h1 {
+      margin-bottom: 20px;
+      text-align: center;
+      color: #BC7C7C; /* Darker muted pink for heading */
+      font-size: 2.5em; /* Larger heading */
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1s; /* Fade-in animation for the heading */
+    }
+
+    /* Textarea styles */
+    textarea {
+      width: 100%;
+      padding: 12px; /* Increased padding for comfort */
+      border-radius: 8px;
+      border: 1px solid #E4C087; /* Light brown border color */
+      margin-bottom: 15px;
+      font-size: 16px;
+      resize: none;
+      transition: border-color 0.3s; /* Smooth border transition */
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle inset shadow */
+    }
+
+    textarea:focus {
+      border-color: #BC7C7C; /* Change border color on focus */
+      outline: none; /* Remove outline */
+      box-shadow: 0 0 5px rgba(188, 124, 124, 0.5); /* Glow effect on focus */
+    }
+
+    /* Range input styles */
+    input[type="range"] {
+      width: 100%;
+      margin-bottom: 15px;
+      background: #E4C087; /* Light brown background */
+      border-radius: 8px; /* Rounded corners */
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; /* Remove default styling */
+      appearance: none;
+      width: 20px; /* Custom thumb width */
+      height: 20px; /* Custom thumb height */
+      background: #4d1141; /* Darker thumb color */
+      border-radius: 50%; /* Circular thumb */
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Shadow for thumb */
+    }
+
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 10px; /* Track height */
+      border-radius: 8px; /* Rounded corners for track */
+      border: none; /* Remove border */
+    }
+
+    /* Button styles */
+    button {
+      background-color: #BC7C7C; /* Muted pink for buttons */
+      border: none;
+      padding: 12px 25px; /* Increased padding */
+      border-radius: 8px; /* More rounded corners */
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
+      position: relative; /* Relative positioning for pseudo-elements */
+      overflow: hidden; /* Ensure child elements stay inside */
+    }
+
+    button[type="reset"] {
+      background-color: #E4C087; /* Light brown for reset button */
+    }
+
+    button:hover {
+      background-color: #A94C4C; /* Darker pink for hover effect */
+      transform: translateY(-2px); /* Slight lift on hover */
+    }
+
+    button[type="reset"]:hover {
+      background-color: #C29A58; /* Darker brown for reset hover */
+      transform: translateY(-2px); /* Slight lift on hover */
+    }
+
+    /* Subheading styles */
+    h3 {
+      margin-top: 20px;
+      text-align: center;
+      color: #BC7C7C; /* Consistent color for subheadings */
+      font-size: 1.5em; /* Slightly larger font for subheading */
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Style for the summarized text area */
+    textarea[name="result"] {
+      width: 100%;
+      padding: 12px; /* Increased padding for comfort */
+      border-radius: 8px; /* More rounded corners */
+      border: 1px solid #E4C087; /* Light brown border color */
+      margin-top: 10px; /* Margin on top for separation */
+      background-color: #ffffff; /* White background for readability */
+      resize: none;
+      font-size: 16px;
+      color: #4d1141; /* Darker text for the result area */
+    }
+
+    textarea[name="result"]:focus {
+      border-color: #BC7C7C; /* Change border color on focus */
+      outline: none; /* Remove outline */
+    }
+
+    /* Animation for fade-in effect */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Data Summarization Tool</h1>
+  <form action="{{ url_for('Summarize') }}" method="post">
+    <textarea name="data" cols="30" rows="10" placeholder="Enter your Data" required="required"></textarea>
+    <label for="MaxL" style="color: #4d1141; font-size: 1.2em;">Summary Length:</label>
+    <input type="range" min="20" max="1000" name="MaxL" value="100">
+    <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+      <button type="reset">Clear</button>
+      <button type="submit">Submit</button>
+    </div>
+  </form>
+
+  <h3>Summarized Text</h3>
+  <textarea name="result" rows="10" cols="30" readonly>{{ result }}</textarea>
+
+</body>
+</html>
